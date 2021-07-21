@@ -33,14 +33,20 @@ import com.example.android.aboutme.databinding.ActivityMainBinding
  */
 class MainActivity : AppCompatActivity() {
 
-    // define reference to generated class
+    // reference to generated class
     private lateinit var binding: ActivityMainBinding
+
+    // reference to data class
+    private val myName: MyName = MyName("Drew Sommer")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // inflate layout and set binding reference
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        // associate data with binding
+        binding.myName = myName
 
         // listen to button click
         binding.doneButton.setOnClickListener { addNickname() }
@@ -53,7 +59,14 @@ class MainActivity : AppCompatActivity() {
 
         // update ui
         binding.apply {
-            nicknameText.text = binding.nicknameEdit.text.toString()
+
+            // capture user supplied nickname
+            myName?.nickname = binding.nicknameEdit.text.toString()
+
+            // refresh ui with new data by invalidating current binding expressions, which triggers new evaluation
+            invalidateAll()
+
+            // update ui
             nicknameEdit.visibility = View.GONE
             doneButton.visibility = View.GONE
             nicknameText.visibility = View.VISIBLE
